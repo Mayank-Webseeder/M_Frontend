@@ -138,6 +138,18 @@ const CutoutOrders = () => {
 
       toast.success(`Order status updated to ${status}`);
 
+      if (status === "cutout_completed") {
+        // toast.success("Order completed! Reloading page...");
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500); // Small delay to show the toast before reload
+      } else {
+        // Clear success message after 3 seconds
+        setTimeout(() => {
+          setUpdateStatus(prev => ({ ...prev, success: null }));
+        }, 3000);
+      }
+
       // Clear success message after 3 seconds
       setTimeout(() => {
         setUpdateStatus(prev => ({ ...prev, success: null }));
