@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 
+:root {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    color-scheme: light;
+    color: #213547;
+    background-color: #ffffff;
+  }
+  
+  body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+  }
+  
+  @layer components {
+    .sidebar-icon {
+      @apply flex flex-col items-center justify-center w-full py-3 text-white hover:bg-[#07545A] transition-colors;
+    }
+    
+    .nav-item {
+      @apply px-3 py-2 text-white hover:bg-bigin-teal rounded transition-colors;
+    }
+    
+    .btn-primary {
+      @apply bg-bigin-teal text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition-colors;
+    }
+    
+    .btn-outline {
+      @apply border border-bigin-teal text-bigin-teal px-4 py-2 rounded-md hover:bg-bigin-teal hover:text-white transition-colors;
+    }
+    
+    .card {
+      @apply bg-white rounded-lg shadow-md p-4;
+    }
+  } */
+
+
+
+  /* Base styles for responsive layout */
+@media (max-width: 1023px) {
+  /* When on mobile/tablet, add padding to the main content */
+  .main-content {
+    padding-left: 0 !important;
+    width: 100% !important;
+  }
+  
+  /* Make navbar full width */
+  .navbar-container {
+    width: 100% !important;
+  }
+}
+
+/* For very small screens */
+@media (max-width: 639px) {
+  /* Reduce paddings */
+  .main-content {
+    padding: 0.5rem !important;
+  }
+  
+  /* Make text smaller */
+  .responsive-text {
+    font-size: 0.875rem !important;
+  }
+  
+  /* Adjust icon sizes */
+  .responsive-icon {
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+  }
+}
+
+/* For tablets */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .main-content {
+    padding: 1rem !important;
+  }
+}
+
+/* For desktop */
+@media (min-width: 1024px) {
+  .sidebar-overlay {
+    display: none !important;
+  }
+}
