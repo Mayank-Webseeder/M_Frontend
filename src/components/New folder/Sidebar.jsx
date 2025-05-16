@@ -31,11 +31,13 @@ const Sidebar = ({ isOpen, toggleSidebar, setActiveMenuItem }) => {
       { name: 'Orders', icon: FileText, path: '/orders' },
       { name: 'Customers', icon: Contact2, path: '/customers' },
       { name: 'Lead', icon: ListTodo, path: '/leads' },
+      // { name: 'Challan', icon: ListTodo, path: '/challan' },
     ],
     Admin: [
       { name: 'Dashboard', icon: LayoutDashboard, path: '/' },
       { name: 'Orders', icon: FileText, path: '/orders' },
       { name: 'Customers', icon: Contact2, path: '/customers' },
+      // { name: 'Challan', icon: ListTodo, path: '/challan' },
     ],
     Graphics: [
       { name: 'Orders', icon: FileText, path: '/graphics-order' },
@@ -45,7 +47,8 @@ const Sidebar = ({ isOpen, toggleSidebar, setActiveMenuItem }) => {
       { name: 'Orders', icon: FileText, path: '/cutout-order' },
     ],
     Accounts: [
-      { name: 'Accounts', icon: DollarSign, path: '/accounts-order' }
+      { name: 'Accounts', icon: DollarSign, path: '/accounts-order' },
+      { name: 'Challan', icon: ListTodo, path: '/challan' },
     ],
     Display: [
       { name: 'Orders', icon: FileText, path: '/display-order' }

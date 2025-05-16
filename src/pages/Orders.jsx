@@ -5,6 +5,7 @@ import CreateNewOrder from "../components/AdminOrder/CreateNewOrder";
 import EditOrder from "../components/AdminOrder/EditOrder";
 import ImagePreviewModal from "../components/AdminOrder/ImagePreviewModal";
 import OrderDetailsModal from "../components/AdminOrder/OrderDetailsModal";
+
 import { useSocketEvents } from "../../src/hooks/useSocketEvents";
 import { useSocket } from "../socket";
 
@@ -73,27 +74,6 @@ const Orders = () => {
       )
     );
   };
-
-  // const getStatusColor = (status) => {
-  //   switch (status) {
-  //     case "New":
-  //       return "bg-gray-100 text-gray-800";
-  //     case "InProgress":
-  //       return "bg-blue-100 text-blue-800";
-  //     case "PendingApproval":
-  //       return "bg-orange-100 text-orange-800";
-  //     case "Approved":
-  //       return "bg-green-100 text-green-800";
-  //     case "Completed":
-  //       return "bg-green-100 text-green-800";
-  //     case "Billed":
-  //       return "bg-indigo-100 text-indigo-800";
-  //     case "Paid":
-  //       return "bg-emerald-100 text-emerald-800";
-  //     default:
-  //       return "bg-yellow-100 text-yellow-800";
-  //   }
-  // };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -335,25 +315,7 @@ const Orders = () => {
   return (
     <div className="bg-gray-50 min-h-screen p-8">
       <div className="container mx-auto">
-        {/* <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              Orders Management
-            </h1>
-            <p className="mt-2 text-sm text-gray-600">
-              Manage and track orders efficiently
-            </p>
-          </div>
-          <button
-            onClick={() => {
-              setShowEditModal(false);
-              setShowCreateModal(true);
-            }}
-            className="flex items-center bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors"
-          >
-            <Plus className="mr-2 h-5 w-5" /> New Order
-          </button>
-        </div> */}
+  
 
         <div className="bg-white shadow-lg rounded-xl overflow-hidden">
           <div className="p-4 border-b bg-gray-50">

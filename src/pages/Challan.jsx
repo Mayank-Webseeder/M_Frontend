@@ -1,3 +1,5 @@
+
+
 import { useState, useEffect } from "react";
 import { 
   RefreshCw, 
@@ -10,16 +12,16 @@ import {
   ChevronRight
 } from "lucide-react";
 import Loader from './Loader';
-import toast from "react-hot-toast";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useSocketEvents } from "../hooks/useSocketEvents";
-import InvoiceManager from './InvoiceManager';
+import ChallanManager from './ChallanManager';
 
 const AccountOrders = () => {
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [updateStatus, setUpdateStatus] = useState({ loading: false, error: null, success: null });
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,8 +34,7 @@ const AccountOrders = () => {
   const statusOptions = [
     "accounts_pending",
     "accounts_billed",
-    "accounts_paid",
-    "order_completed"
+    "accounts_paid"
   ];
   
   const statusColors = {
@@ -113,58 +114,6 @@ const AccountOrders = () => {
       setError(error.message);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleStatusUpdate = async (orderId, status) => {
-    try {
-      setUpdateStatus({ loading: true, error: null, success: null });
-      const token = localStorage.getItem("token");
-
-      const response = await fetch(`${BASE_URL}/api/v1/admin/accounts/updateStatus`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `${token}`
-        },
-        body: JSON.stringify({ orderId, status })
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || "Failed to update status");
-      }
-
-      setOrders(orders.map(order =>
-        order._id === orderId ? { ...order, status } : order
-      ));
-
-      setUpdateStatus({
-        loading: false,
-        error: null,
-        success: `Order status updated to ${status}`
-      });
-
-      toast.success(`Order status updated to ${status}`);
-
-      setTimeout(() => {
-        setUpdateStatus(prev => ({ ...prev, success: null }));
-      }, 3000);
-
-    } catch (error) {
-      console.error("Error updating status:", error);
-      setUpdateStatus({
-        loading: false,
-        error: error.message,
-        success: null
-      });
-
-      toast.error(`Failed to update status: ${error.message}`);
-
-      setTimeout(() => {
-        setUpdateStatus(prev => ({ ...prev, error: null }));
-      }, 5000);
     }
   };
 
@@ -276,7 +225,7 @@ const AccountOrders = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen p-4 sm:p-6 md:p-8">
-      {/* <ToastContainer position="top-right" autoClose={3000} /> */}
+      <ToastContainer position="top-right" autoClose={3000} />
       
       <div className="container mx-auto">
         <div className="bg-white shadow-lg rounded-xl overflow-hidden">
@@ -302,7 +251,7 @@ const AccountOrders = () => {
                   <option key={status} value={status}>{status}</option>
                 ))}
               </select>
-              {/* <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" /> */}
+              <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
             </div>
           </div>
 
@@ -335,8 +284,7 @@ const AccountOrders = () => {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Invoice</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Challan</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
@@ -367,19 +315,7 @@ const AccountOrders = () => {
                         {formatDate(order.createdAt)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <InvoiceManager order={order} />
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <select
-                          className="text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          onChange={(e) => handleStatusUpdate(order._id, e.target.value)}
-                          value={order.status || ""}
-                        >
-                          <option value="" disabled>Status</option>
-                          {statusOptions.map(status => (
-                            <option key={status} value={status}>{status}</option>
-                          ))}
-                        </select>
+                        <ChallanManager order={order} />
                       </td>
                     </tr>
                   ))}

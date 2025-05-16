@@ -20,6 +20,7 @@ import GraphicsOrder from './pages/GraphicsOrder';
 import CutoutOrder from './pages/CutoutOrder';
 import AccountOrder from './pages/AccountsOrder';
 import DisplayOrder from './pages/DisplayOrders';
+import Challan from './pages/Challan'
 
 
 function App() {
@@ -110,6 +111,7 @@ function App() {
                         <Route path="/cutout-order" element={<CutoutOrder />} />
                         <Route path="/accounts-order" element={<AccountOrder />} />
                         <Route path="/display-order" element={<DisplayOrder />} />
+                        <Route path="/challan" element={<Challan/>}/>
                       </Routes>
                     </main>
                   </div>
