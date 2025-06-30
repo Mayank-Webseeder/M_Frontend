@@ -21,6 +21,8 @@ import CutoutOrder from './pages/CutoutOrder';
 import AccountOrder from './pages/AccountsOrder';
 import DisplayOrder from './pages/DisplayOrders';
 import Challan from './pages/Challan'
+import ImageSearch from './pages/ImageSearch';
+import Gallery2 from './pages/Gallery2';
 
 
 function App() {
@@ -112,6 +114,9 @@ function App() {
                         <Route path="/accounts-order" element={<AccountOrder />} />
                         <Route path="/display-order" element={<DisplayOrder />} />
                         <Route path="/challan" element={<Challan/>}/>
+                        <Route path="/image-search" element={<ImageSearch/>}/>
+                        <Route path="/gallery2" element={<Gallery2/>}/>
+
                       </Routes>
                     </main>
                   </div>

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
@@ -12,6 +11,7 @@ import {
   DollarSign,
   Settings,
   LogOut,
+  SearchCheck,
   X
 } from 'lucide-react';
 import toast from "react-hot-toast";
@@ -31,16 +31,22 @@ const Sidebar = ({ isOpen, toggleSidebar, setActiveMenuItem }) => {
       { name: 'Orders', icon: FileText, path: '/orders' },
       { name: 'Customers', icon: Contact2, path: '/customers' },
       { name: 'Lead', icon: ListTodo, path: '/leads' },
-      // { name: 'Challan', icon: ListTodo, path: '/challan' },
+      { name: 'Gallery', icon: SearchCheck, path: '/image-search' },
+      // { name: 'Gallery 2', icon: SearchCheck, path: '/gallery2' },
+      // { name: 'Gallery', icon: Image, path: '/gallery' },
     ],
     Admin: [
       { name: 'Dashboard', icon: LayoutDashboard, path: '/' },
       { name: 'Orders', icon: FileText, path: '/orders' },
       { name: 'Customers', icon: Contact2, path: '/customers' },
+      { name: 'Gallery', icon: SearchCheck, path: '/image-search' },
+      // { name: 'Gallery', icon: Image, path: '/gallery' },
       // { name: 'Challan', icon: ListTodo, path: '/challan' },
     ],
     Graphics: [
       { name: 'Orders', icon: FileText, path: '/graphics-order' },
+      { name: 'Gallery', icon: SearchCheck, path: '/image-search' },
+      // { name: 'Gallery', icon: Image, path: '/gallery' },
 
     ],
     Cutout: [
