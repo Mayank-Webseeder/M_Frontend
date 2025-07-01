@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { 
-  RefreshCw, 
-  ChevronDown, 
-  Search, 
-  Package, 
+import {
+  RefreshCw,
+  ChevronDown,
+  Search,
+  Package,
   AlertCircle,
   Upload,
   Eye
@@ -33,31 +33,31 @@ const GraphicsOrders = () => {
   const [viewingOrder, setViewingOrder] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null); // For modal
   const { socket, connected } = useSocket();
-  
+
   const [currentPage, setCurrentPage] = useState(1);
   const [ordersPerPage, setOrdersPerPage] = useState(10);
-  
+
   const BASE_URL = import.meta.env.VITE_BASE_URL;
-  
+
   const statusOptions = ["graphics_pending", "graphics_in_progress", "graphics_completed"];
-  
+
   const statusColors = {
     "graphics_completed": "bg-green-100 text-green-800",
-    "graphics_in_progress": "bg-blue-100 text-blue-800",   
+    "graphics_in_progress": "bg-blue-100 text-blue-800",
     "graphics_pending": "bg-gray-100 text-gray-800"
   };
-  
+
   const setStatusHandler = (data) => {
-    setOrders(prevOrders => 
-      prevOrders.map(order => 
-        order._id === data.orderId 
-          ? { ...order, ...data.order } 
+    setOrders(prevOrders =>
+      prevOrders.map(order =>
+        order._id === data.orderId
+          ? { ...order, ...data.order }
           : order
       )
     );
     toast.info(`Order #${data.order.orderId} has been updated by admin`);
   };
-  
+
   useSocketEvents({
     "orderUpdated": setStatusHandler,
   });
@@ -65,11 +65,11 @@ const GraphicsOrders = () => {
   useEffect(() => {
     fetchOrders();
   }, []);
-  
+
   useEffect(() => {
     let result = orders;
     if (searchTerm) {
-      result = result.filter(order => 
+      result = result.filter(order =>
         order.orderId.toLowerCase().includes(searchTerm.toLowerCase()) ||
         order.requirements.toLowerCase().includes(searchTerm.toLowerCase())
       );
@@ -120,15 +120,15 @@ const GraphicsOrders = () => {
       const token = localStorage.getItem("token");
       const response = await fetch(`${BASE_URL}/api/v1/admin/updateWorkQueue`, {
         method: "POST",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
-          "Authorization": `${token}` 
+          "Authorization": `${token}`
         },
         body: JSON.stringify({ workQueueId, status })
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || "Failed to update status");
-      setOrders(orders.map(order => 
+      setOrders(orders.map(order =>
         order._id === workQueueId ? { ...order, status } : order
       ));
       setUpdateStatus({ loading: false, error: null, success: `Order status updated to ${status}` });
@@ -142,7 +142,7 @@ const GraphicsOrders = () => {
   };
 
   const renderStatusBadge = (status) => (
-    <span 
+    <span
       className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[status] || 'bg-gray-100 text-gray-800'}`}
     >
       {status}
@@ -156,11 +156,11 @@ const GraphicsOrders = () => {
   };
 
   const closeImagePreview = () => setPreviewImage(null);
-  
+
   const handleFileUploadClick = (orderId) => setUploadingOrder(orderId);
-  
+
   const handleViewFilesClick = (order) => setViewingOrder(order);
-  
+
   const handleUploadSuccess = () => {
     setUploadingOrder(null);
     fetchOrders();
@@ -267,8 +267,8 @@ const GraphicsOrders = () => {
                         <div className="flex flex-wrap gap-2">
                           {order.image.slice(0, 3).map((img, index) => (
                             <div key={index} className="relative cursor-pointer">
-                              <img 
-                                src={`${BASE_URL}${img}`} 
+                              <img
+                                src={`${BASE_URL}${img}`}
                                 alt={`Image ${index + 1}`}
                                 className="w-10 h-10 object-cover rounded border hover:opacity-80 transition-opacity"
                                 onClick={(e) => { e.stopPropagation(); handleImageClick(order.image, index); }}
@@ -304,16 +304,18 @@ const GraphicsOrders = () => {
                           </button>
                         ) : null}
                         <div className="relative">
-                          <select 
-                            className="text-xs sm:text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            onChange={(e) => handleStatusUpdate(order._id, e.target.value)}
-                            value={order.status || ""}
-                          >
-                            <option value="" disabled>Status</option>
-                            {statusOptions.map(status => (
-                              <option key={status} value={status}>{status}</option>
-                            ))}
-                          </select>
+                          <select
+  className="text-xs sm:text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+  onClick={(e) => e.stopPropagation()} // ✅ Prevent bubbling up
+  onChange={(e) => handleStatusUpdate(order._id, e.target.value)}
+  value={order.status || ""}
+>
+  <option value="" disabled>Status</option>
+  {statusOptions.map(status => (
+    <option key={status} value={status}>{status}</option>
+  ))}
+</select>
+
                         </div>
                       </div>
                     </td>
@@ -335,9 +337,9 @@ const GraphicsOrders = () => {
           />
         )}
       </div>
-      
+
       {uploadingOrder && (
-        <FileUploadModal 
+        <FileUploadModal
           orderId={uploadingOrder}
           onClose={() => setUploadingOrder(null)}
           onSuccess={handleUploadSuccess}
@@ -352,17 +354,24 @@ const GraphicsOrders = () => {
         />
       )}
       {previewImage && (
-        <ImagePreviewModal 
+        <ImagePreviewModal
           imageUrl={previewImage}
           onClose={closeImagePreview}
           initialIndex={previewInitialIndex}
         />
       )}
       {selectedOrder && (
-        <OrderGraphicsDetails 
-          order={selectedOrder} 
-          onClose={() => setSelectedOrder(null)} 
-          baseUrl={BASE_URL} 
+        <OrderGraphicsDetails
+          order={selectedOrder}
+          onClose={() => setSelectedOrder(null)}
+          baseUrl={BASE_URL}
+        />
+      )}
+
+      {selectedOrder && (
+        <OrderGraphicsDetails
+          order={selectedOrder}
+          onClose={() => setSelectedOrder(null)}
         />
       )}
     </div>
