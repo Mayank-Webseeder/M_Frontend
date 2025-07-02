@@ -87,7 +87,7 @@ const CreateNewOrder = ({ onClose, addOrder }) => {
             }
     
             const result = await response.json();
-            console.log("Order Created:", result);
+
             toast.success("Order created successfully");
     
             if (onClose) onClose();

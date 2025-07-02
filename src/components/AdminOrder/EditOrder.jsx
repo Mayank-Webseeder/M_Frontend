@@ -121,7 +121,7 @@ const EditOrder = ({ onClose, editOrder }) => {
       if (!response.ok) throw new Error("Failed to update order");
 
       const result = await response.json();
-      console.log("Order Updated:", result);
+     
       toast.success("Order updated successfully!");
 
       if (onClose) onClose();

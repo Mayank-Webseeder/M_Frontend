@@ -45,7 +45,6 @@ function Navbar({ toggleSidebar, activeMenuItem }) {
       // Set unread count when fetching notifications
       setUnreadCount(formattedNotifications.length);
 
-      console.log("formatted notification", formattedNotifications);
       setHasMore(formattedNotifications.length === notifLimit);
     } catch (error) {
       toast.error("Failed to fetch notifications");

@@ -10,7 +10,7 @@ export const useSocketEvents = (eventHandlers = {}) => {
       return;
     }
 
-    console.log("Setting up socket event listeners");
+   
     
     // Add all event listeners
     Object.entries(eventHandlers).forEach(([event, handler]) => {

@@ -305,16 +305,16 @@ const GraphicsOrders = () => {
                         ) : null}
                         <div className="relative">
                           <select
-  className="text-xs sm:text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-  onClick={(e) => e.stopPropagation()} // ✅ Prevent bubbling up
-  onChange={(e) => handleStatusUpdate(order._id, e.target.value)}
-  value={order.status || ""}
->
-  <option value="" disabled>Status</option>
-  {statusOptions.map(status => (
-    <option key={status} value={status}>{status}</option>
-  ))}
-</select>
+                            className="text-xs sm:text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            onClick={(e) => e.stopPropagation()} // ✅ Prevent bubbling up
+                            onChange={(e) => handleStatusUpdate(order._id, e.target.value)}
+                            value={order.status || ""}
+                          >
+                            <option value="" disabled>Status</option>
+                            {statusOptions.map(status => (
+                              <option key={status} value={status}>{status}</option>
+                            ))}
+                          </select>
 
                         </div>
                       </div>

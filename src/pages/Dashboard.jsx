@@ -104,7 +104,6 @@ const Dashboard = () => {
       if (!response.ok) throw new Error("Failed to fetch orders");
 
       const data = await response.json();
-      console.log("this is data", data);
       setOrders(data.orders);
       setCurrentPage(1); // Reset to first page when fetching new orders
     } catch (error) {

@@ -123,7 +123,7 @@ const UserModal = ({ mode, user, onClose, onSave, baseUrl }) => {
           headers: { Authorization: `${token}` },
           withCredentials: true,
         });
-        console.log("kamal res", response);
+
         toast.success("User created successfully");
         if(response.success === "false"){
           toast.error(response.message);
@@ -133,7 +133,7 @@ const UserModal = ({ mode, user, onClose, onSave, baseUrl }) => {
     }
     catch (error) {
       console.error(isEditMode ? "Error updating user:" : "Error creating user:", error);
-      console.log("kamal error", error.response);
+    
       if (
         error.response.data.success == false
       ) {

@@ -3,6 +3,8 @@ import { Search, X, Loader, Download } from "lucide-react";
 import toast from "react-hot-toast";
 
 const OrderGraphicsDetails = ({ order, onClose, baseUrl }) => {
+
+  const baseUrl2 = import.meta.env.VITE_BASE_URL;
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [searchingImageId, setSearchingImageId] = useState(null);
@@ -124,14 +126,14 @@ const OrderGraphicsDetails = ({ order, onClose, baseUrl }) => {
                 {order.image.map((img, index) => (
                   <div key={index} className="group relative rounded-lg overflow-hidden shadow-sm transition-all duration-200 hover:shadow-md">
                     <img
-                      src={`${baseUrl}${img}`}
+                      src={`${baseUrl2}${img}`}
                       alt={`Reference Image ${index + 1}`}
                       className="w-full h-48 object-cover"
                     />
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center">
                       <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
                         <button
-                          onClick={() => handleImageSearch(`${baseUrl}${img}`, `ref_image_${index + 1}.jpg`, `img-${order._id}-${index}`)}
+                          onClick={() => handleImageSearch(`${baseUrl2}${img}`, `ref_image_${index + 1}.jpg`, `img-${order._id}-${index}`)}
                           disabled={isSearching && searchingImageId === `img-${order._id}-${index}`}
                           className="p-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white rounded-full transition-all"
                           title="Search Similar Images"
@@ -240,3 +242,4 @@ const OrderGraphicsDetails = ({ order, onClose, baseUrl }) => {
 };
 
 export default OrderGraphicsDetails;
+

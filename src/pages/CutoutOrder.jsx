@@ -93,7 +93,6 @@ const CutoutOrders = () => {
       if (!response.ok) throw new Error("Failed to fetch orders");
 
       const data = await response.json();
-      console.log("Fetched cutout orders:", data);
       const ordersData = data.data || [];
       setOrders(ordersData);
       setFilteredOrders(ordersData);
