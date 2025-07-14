@@ -717,14 +717,15 @@ const ImageSearch = () => {
                                   <Eye className="h-4 w-4 mr-1" />
                                   View
                                 </button>
-                                <button
+                                {/* <button
                                   onClick={() => handleGalleryImageSearch(result.url)}
                                   className="text-indigo-600 hover:text-indigo-900 flex items-center"
                                   title="Search Similar Images"
                                 >
                                   <Search className="h-4 w-4 mr-1" />
                                   Search
-                                </button>
+                                </button> */}
+                                
                                 <button
                                   onClick={() => handleDownloadFile(result.url, result.name)}
                                   className="text-blue-600 hover:text-blue-900 flex items-center"
