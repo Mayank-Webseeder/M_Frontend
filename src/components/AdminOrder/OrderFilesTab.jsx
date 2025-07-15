@@ -33,6 +33,14 @@ const OrderFilesTab = ({ order, BASE_URL }) => {
       });
 
       if (!response.ok) {
+        if (response.status === 404) {
+          // Handle 404 specifically by setting fileData to empty array
+          const data = await response.json();
+          if (data.message === "No files found for this order") {
+            setFileData([]);
+            return;
+          }
+        }
         throw new Error("Failed to fetch file data");
       }
 
@@ -45,6 +53,30 @@ const OrderFilesTab = ({ order, BASE_URL }) => {
       setLoading(false);
     }
   };
+
+  // const fetchFileData = async () => {
+  //   try {
+  //     setLoading(true);
+  //     setError(null);
+  //     const token = localStorage.getItem("token");
+  //     const response = await fetch(`${BASE_URL}${API_PREFIX}/files/order/${order._id}`, {
+  //       method: "GET",
+  //       headers: { Authorization: `${token}` },
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error("Failed to fetch file data");
+  //     }
+
+  //     const data = await response.json();
+  //     setFileData(data.data);
+  //   } catch (err) {
+  //     console.error("Error fetching file data:", err);
+  //     setError(err.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const downloadFile = async (documentId, fileType = null, downloadType = "single", fileIndex = null, filename = "") => {
     try {
@@ -499,14 +531,23 @@ const OrderFilesTab = ({ order, BASE_URL }) => {
                             <Download className="h-3 w-3 mr-1.5" />
                             Download Image
                           </button>
-                          <button
+                          {/* <button
                             onClick={() => handleDownloadFile(result.cad_url, result.name.replace(/\.[^/.]+$/, ".cad"))}
                             disabled={!result.cad_url}
                             className="flex-1 flex items-center justify-center px-3 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-medium rounded-lg hover:bg-indigo-200 disabled:bg-gray-100 disabled:text-gray-500 transition-colors"
                           >
                             <Download className="h-3 w-3 mr-1.5" />
                             Download CAD
-                          </button>
+                          </button> */}
+                          {result.cad_url && (
+                            <button
+                              onClick={() => handleDownloadFile(result.cad_url, result.name)}
+                              className="flex-1 flex items-center justify-center px-3 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-medium rounded-lg hover:bg-indigo-200 transition-colors"
+                            >
+                              <Download className="h-3 w-3 mr-1.5" />
+                              CAD
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>

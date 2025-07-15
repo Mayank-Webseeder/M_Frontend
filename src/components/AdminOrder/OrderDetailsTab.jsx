@@ -379,14 +379,23 @@ const OrderDetailsTab = ({ order, BASE_URL }) => {
                             <Download className="h-3 w-3 mr-1.5" />
                             Download Image
                           </button>
-                          <button
+                          {/* <button
                             onClick={() => handleDownloadFile(result.cad_url, result.name.replace(/\.[^/.]+$/, ".cad"))}
                             disabled={!result.cad_url}
                             className="flex-1 flex items-center justify-center px-3 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-medium rounded-lg hover:bg-indigo-200 disabled:bg-gray-100 disabled:text-gray-500 transition-colors"
                           >
                             <Download className="h-3 w-3 mr-1.5" />
                             Download CAD
-                          </button>
+                          </button> */}
+                          {result.cad_url && (
+                            <button
+                              onClick={() => handleDownloadFile(result.cad_url, result.name)}
+                              className="flex-1 flex items-center justify-center px-3 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-medium rounded-lg hover:bg-indigo-200 transition-colors"
+                            >
+                              <Download className="h-3 w-3 mr-1.5" />
+                              CAD
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>

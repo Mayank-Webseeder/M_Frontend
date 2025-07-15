@@ -656,16 +656,26 @@ const OrderDetailsModal = ({ order, onClose }) => {
                             className="flex-1 flex items-center justify-center px-3 py-1.5 bg-blue-100 text-blue-700 text-xs font-medium rounded-lg hover:bg-blue-200 transition-colors"
                           >
                             <Download className="h-3 w-3 mr-1.5" />
-                            Download Image
+                             Image
                           </button>
-                          <button
+                          {/* <button
                             onClick={() => handleDownloadFile(result.cad_url, result.name.replace(/\.[^/.]+$/, ".cad"))}
                             disabled={!result.cad_url}
                             className="flex-1 flex items-center justify-center px-3 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-medium rounded-lg hover:bg-indigo-200 disabled:bg-gray-100 disabled:text-gray-500 transition-colors"
                           >
                             <Download className="h-3 w-3 mr-1.5" />
                             Download CAD
-                          </button>
+                          </button> */}
+
+                          {result.cad_url && (
+                            <button
+                              onClick={() => handleDownloadFile(result.cad_url, result.name)}
+                              className="flex-1 flex items-center justify-center px-3 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-medium rounded-lg hover:bg-indigo-200 transition-colors"
+                            >
+                              <Download className="h-3 w-3 mr-1.5" />
+                              CAD
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -704,8 +714,8 @@ const OrderDetailsModal = ({ order, onClose }) => {
           <button
             onClick={() => setActiveTab("details")}
             className={`px-6 py-3 text-sm font-medium transition-colors ${activeTab === "details"
-                ? "border-b-2 border-blue-600 text-blue-600 bg-white"
-                : "text-gray-600 hover:text-gray-800"
+              ? "border-b-2 border-blue-600 text-blue-600 bg-white"
+              : "text-gray-600 hover:text-gray-800"
               }`}
           >
             Order Details
@@ -713,8 +723,8 @@ const OrderDetailsModal = ({ order, onClose }) => {
           <button
             onClick={() => setActiveTab("files")}
             className={`px-6 py-3 text-sm font-medium transition-colors ${activeTab === "files"
-                ? "border-b-2 border-blue-600 text-blue-600 bg-white"
-                : "text-gray-600 hover:text-gray-800"
+              ? "border-b-2 border-blue-600 text-blue-600 bg-white"
+              : "text-gray-600 hover:text-gray-800"
               }`}
           >
             Files

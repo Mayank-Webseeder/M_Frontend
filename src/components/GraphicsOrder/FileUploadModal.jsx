@@ -2,7 +2,6 @@ import { useRef, useState } from "react";
 import { Upload, X, File, FileText, Image } from "lucide-react";
 import toast from "react-hot-toast";
 
-const IMAGE_SEARCH_API = import.meta.env.VITE_FAST_API;
 
 const FileUploadModal = ({ orderId, onClose, onSuccess, baseUrl }) => {
   const [isUploading, setIsUploading] = useState(false);
@@ -43,81 +42,6 @@ const FileUploadModal = ({ orderId, onClose, onSuccess, baseUrl }) => {
     return `${fileName.substr(0, 15)}...${extension}`;
   };
 
-  const createRenamedFile = (originalFile, newFilename) => {
-    try {
-      return new File([originalFile], newFilename, {
-        type: originalFile.type,
-        lastModified: originalFile.lastModified,
-      });
-    } catch (error) {
-      const blob = new Blob([originalFile], { type: originalFile.type });
-      Object.defineProperty(blob, "name", {
-        value: newFilename,
-        writable: false,
-      });
-      Object.defineProperty(blob, "lastModified", {
-        value: originalFile.lastModified || Date.now(),
-        writable: false,
-      });
-      return blob;
-    }
-  };
-
-  const uploadToFastAPI = async (imageFile, cadFile) => {
-    try {
-      // Fetch current image count to generate sequential filenames
-      const listResponse = await fetch(
-        `${IMAGE_SEARCH_API}/list?page=1&per_page=1`
-      );
-      if (!listResponse.ok) {
-        throw new Error("Failed to fetch image count for naming");
-      }
-
-      const listData = await listResponse.json();
-      const totalImages = listData.total || 0;
-      const newImageNumber = totalImages + 1;
-
-      // Generate filenames
-      const imageExtension = imageFile.name.split(".").pop().toLowerCase();
-      const cadExtension = cadFile.name.split(".").pop().toLowerCase();
-      const newImageFilename = `IMG${String(newImageNumber).padStart(
-        5,
-        "0"
-      )}.${imageExtension}`;
-      const newCadFilename = `CAD${String(newImageNumber).padStart(
-        5,
-        "0"
-      )}.${cadExtension}`;
-
-      // Create renamed files
-      const renamedImageFile = createRenamedFile(imageFile, newImageFilename);
-      const renamedCadFile = createRenamedFile(cadFile, newCadFilename);
-
-      // Prepare FormData
-      const formData = new FormData();
-      formData.append("image", renamedImageFile, newImageFilename);
-      formData.append("cad_file", renamedCadFile, newCadFilename);
-
-      // Make request to /v2/add
-      const response = await fetch(`${IMAGE_SEARCH_API}/v2/add`, {
-        method: "POST",
-        body: formData,
-      });
-
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.message || "Upload to /v2/add failed");
-      }
-
-      toast.success(
-        `✨ Files uploaded to image-search API as ${newImageFilename} and ${newCadFilename}`
-      );
-    } catch (err) {
-      console.error("FastAPI upload error:", err);
-      toast.error(`Upload to secondary API failed: ${err.message}`);
-    }
-  };
-
   const handleFileUpload = async () => {
     if (uploadFiles.cadFiles.length === 0) {
       toast.error("Please select at least one CAD file");
@@ -141,7 +65,7 @@ const FileUploadModal = ({ orderId, onClose, onSuccess, baseUrl }) => {
         formData.append("textFiles", file)
       );
 
-      // Upload to main API
+    
       const response = await fetch(`${baseUrl}/api/v1/admin/fileupload`, {
         method: "POST",
         headers: { Authorization: `${token}` },
@@ -154,10 +78,6 @@ const FileUploadModal = ({ orderId, onClose, onSuccess, baseUrl }) => {
       toast.success("Files uploaded successfully");
       onSuccess();
 
-      // Upload first image and CAD file to /v2/add
-      // if (uploadFiles.images.length > 0 && uploadFiles.cadFiles.length > 0) {
-      //   await uploadToFastAPI(uploadFiles.images[0], uploadFiles.cadFiles[0]);
-      // }
     } catch (error) {
       console.error("Error uploading files:", error);
       toast.error(`Upload failed: ${error.message}`);

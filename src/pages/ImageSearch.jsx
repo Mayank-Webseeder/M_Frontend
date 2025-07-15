@@ -725,7 +725,7 @@
 //                                   <Search className="h-4 w-4 mr-1" />
 //                                   Search
 //                                 </button> */}
-                                
+
 //                                 <button
 //                                   onClick={() => handleDownloadFile(result.url, result.name)}
 //                                   className="text-blue-600 hover:text-blue-900 flex items-center"
@@ -751,7 +751,7 @@
 //                       </table>
 //                     </div>
 //                   )}
-  
+
 //                   {totalPages > 1 && (
 //                     <div className="mt-6 flex items-center justify-between border-t border-gray-200 pt-4">
 //                       <div className="flex-1 flex items-center justify-between">
@@ -836,13 +836,13 @@ const ImageSearch = () => {
   const addImageInputRef = useRef(null);
   const [nameFilter, setNameFilter] = useState('');
 
-  // API base URL from environment variable
+
   const API_BASE_URL = import.meta.env.VITE_FAST_API;
   const BASE_URL = import.meta.env.VITE_BASE_URL
-  // Token for authentication (assuming it's stored or retrieved from context/localStorage)
-    const token = localStorage.getItem("token");// Adjust based on your auth implementation
-  
-    console.log("token", token);
+
+  const token = localStorage.getItem("token");// Adjust based on your auth implementation
+
+  console.log("token", token);
   // Load all images on component mount or page change
   useEffect(() => {
     loadAllImages();
@@ -915,113 +915,63 @@ const ImageSearch = () => {
   };
 
   const handleAddImageToDatabase = async (event) => {
-  const files = Array.from(event.target.files); // Get all selected files
-  if (!files.length) return;
+    const files = Array.from(event.target.files); // Get all selected files
+    if (!files.length) return;
 
-  // Validate all files
-  for (const file of files) {
-    if (!file.type.startsWith('image/')) {
-      setError(`File "${file.name}" is not a valid image file`);
-      return;
+    // Validate all files
+    for (const file of files) {
+      if (!file.type.startsWith('image/')) {
+        setError(`File "${file.name}" is not a valid image file`);
+        return;
+      }
+
+      if (file.size > 10 * 1024 * 1024) {
+        setError(`File "${file.name}" exceeds 10MB limit`);
+        return;
+      }
     }
 
-    if (file.size > 10 * 1024 * 1024) {
-      setError(`File "${file.name}" exceeds 10MB limit`);
-      return;
+    setAddingToDatabase(true);
+    setError('');
+
+    try {
+      const formData = new FormData();
+
+      // Append all selected images
+      files.forEach((file) => {
+        formData.append('images', file);
+      });
+
+      const response = await fetch(`${BASE_URL}/api/v1/admin/add-to-db`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to add images: ${response.status} ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      setSuccessMessage(`✨ ${result.message || `Successfully added ${files.length} image(s) to database!`}`);
+
+      setCurrentPage(1);
+      await loadAllImages();
+
+      if (addImageInputRef.current) {
+        addImageInputRef.current.value = '';
+      }
+    } catch (err) {
+      console.error('Add images error:', err);
+      setError(`Failed to add images: ${err.message}`);
+      toast.error(`Failed to add images: ${err.message}`);
+    } finally {
+      setAddingToDatabase(false);
     }
-  }
+  };
 
-  setAddingToDatabase(true);
-  setError('');
-
-  try {
-    const formData = new FormData();
-    
-    // Append all selected images
-    files.forEach((file) => {
-      formData.append('images', file);
-    });
-
-    const response = await fetch(`${BASE_URL}/api/v1/admin/add-to-db`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      },
-      body: formData,
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to add images: ${response.status} ${response.statusText}`);
-    }
-
-    const result = await response.json();
-    setSuccessMessage(`✨ ${result.message || `Successfully added ${files.length} image(s) to database!`}`);
-
-    setCurrentPage(1);
-    await loadAllImages();
-
-    if (addImageInputRef.current) {
-      addImageInputRef.current.value = '';
-    }
-  } catch (err) {
-    console.error('Add images error:', err);
-    setError(`Failed to add images: ${err.message}`);
-    toast.error(`Failed to add images: ${err.message}`);
-  } finally {
-    setAddingToDatabase(false);
-  }
-};
-
-  // const handleAddImageToDatabase = async (event) => {
-  //   const file = event.target.files[0];
-  //   if (!file) return;
-
-  //   if (!file.type.startsWith('image/')) {
-  //     setError('Please select a valid image file');
-  //     return;
-  //   }
-
-  //   if (file.size > 10 * 1024 * 1024) {
-  //     setError('File size must be less than 10MB');
-  //     return;
-  //   }
-
-  //   setAddingToDatabase(true);
-  //   setError('');
-
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append('images', file); // Use 'images' field as per the new API
-
-  //     const response = await fetch(`${BASE_URL}/api/v1/admin/add-to-db`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Authorization': `Bearer ${token}` // Fixed: Removed duplicate 'headers' and added 'Bearer '
-  //       },
-  //       body: formData,
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error(`Failed to add image: ${response.status} ${response.statusText}`);
-  //     }
-
-  //     const result = await response.json();
-  //     setSuccessMessage(`✨ ${result.message || 'Image added successfully to database!'}`);
-
-  //     setCurrentPage(1);
-  //     await loadAllImages();
-
-  //     if (addImageInputRef.current) {
-  //       addImageInputRef.current.value = '';
-  //     }
-  //   } catch (err) {
-  //     console.error('Add image error:', err);
-  //     setError(`Failed to add image: ${err.message}`);
-  //     toast.error(`Failed to add image: ${err.message}`);
-  //   } finally {
-  //     setAddingToDatabase(false);
-  //   }
-  // };
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -1163,16 +1113,16 @@ const ImageSearch = () => {
   const displayResults = searchResults.length > 0
     ? filteredAndSortedResults
     : allImages
-        .filter((img) => img.name.toLowerCase().includes(nameFilter.toLowerCase()))
-        .map((img) => ({
-          id: img.id,
-          url: img.url,
-          cad_url: img.cad_url,
-          name: img.name,
-          similarity: img.similarity,
-          size: img.size,
-          format: img.format,
-        }));
+      .filter((img) => img.name.toLowerCase().includes(nameFilter.toLowerCase()))
+      .map((img) => ({
+        id: img.id,
+        url: img.url,
+        cad_url: img.cad_url,
+        name: img.name,
+        similarity: img.similarity,
+        size: img.size,
+        format: img.format,
+      }));
 
   const filteredResults = searchResults.length > 0 ? filteredAndSortedResults : allImages.filter((img) => img.name.toLowerCase().includes(nameFilter.toLowerCase()));
   const startIndex = (currentPage - 1) * itemsPerPage + 1;
@@ -1210,9 +1160,9 @@ const ImageSearch = () => {
         )}
 
         {/* Action Cards */}
-        <div className="w-full gap-6 mb-8">
+        <div className="w-full gap-6 mb-8 flex flex-col md:flex-row">
           {/* Upload for Search Card */}
-          <div className="bg-white/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 hover:shadow-2xl transition-all duration-300">
+          <div className="w-full md:w-1/2 bg-white/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 hover:shadow-2xl transition-all duration-300">
             <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
               <h2 className="text-xl font-bold flex items-center">
                 <Search className="mr-3 h-6 w-6" />
@@ -1299,14 +1249,13 @@ const ImageSearch = () => {
             </div>
           </div>
 
-          {/* Add to Database Card */}
-          {/* <div className="bg-white/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 hover:shadow-2xl transition-all duration-300">
+          <div className="w-full md:w-1/2 bg-white/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 hover:shadow-2xl transition-all duration-300">
             <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-emerald-500 to-teal-600 text-white">
               <h2 className="text-xl font-bold flex items-center">
                 <Database className="mr-3 h-6 w-6" />
                 Add to Database
               </h2>
-              <p className="text-emerald-100 mt-1">Upload images to expand the search database</p>
+              <p className="text-emerald-100 mt-1">Upload multiple images to expand the search database</p>
             </div>
 
             <div className="p-6">
@@ -1318,7 +1267,7 @@ const ImageSearch = () => {
                       Expand the image database
                     </p>
                     <p className="text-emerald-600 text-sm">
-                      Images will be stored in the database
+                      Select multiple images to upload at once
                     </p>
                   </div>
                 </div>
@@ -1335,73 +1284,25 @@ const ImageSearch = () => {
                       Adding...
                     </>
                   ) : (
-                    'Choose Image to Add'
+                    'Choose Images to Add'
                   )}
                 </button>
                 <input
                   ref={addImageInputRef}
                   type="file"
                   accept="image/*"
+                  multiple // Added multiple attribute
                   onChange={handleAddImageToDatabase}
                   className="hidden"
                 />
+
+                {/* Optional: Show selected files count */}
+                <p className="text-xs text-gray-500 mt-2">
+                  Hold Ctrl/Cmd to select multiple images
+                </p>
               </div>
             </div>
-          </div> */}
-          <div className="bg-white/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 hover:shadow-2xl transition-all duration-300">
-  <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-emerald-500 to-teal-600 text-white">
-    <h2 className="text-xl font-bold flex items-center">
-      <Database className="mr-3 h-6 w-6" />
-      Add to Database
-    </h2>
-    <p className="text-emerald-100 mt-1">Upload multiple images to expand the search database</p>
-  </div>
-
-  <div className="p-6">
-    <div className="text-center">
-      <div className="mb-6">
-        <div className="bg-gradient-to-r from-emerald-100 to-teal-100 rounded-xl p-6 border border-emerald-200">
-          <Upload className="mx-auto h-12 w-12 text-emerald-600 mb-3" />
-          <p className="text-emerald-800 font-medium mb-2">
-            Expand the image database
-          </p>
-          <p className="text-emerald-600 text-sm">
-            Select multiple images to upload at once
-          </p>
-        </div>
-      </div>
-
-      <button
-        onClick={() => addImageInputRef.current?.click()}
-        disabled={addingToDatabase}
-        className="w-full flex items-center justify-center bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-xl transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
-      >
-        <Plus className="mr-2 h-5 w-5" />
-        {addingToDatabase ? (
-          <>
-            <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
-            Adding...
-          </>
-        ) : (
-          'Choose Images to Add'
-        )}
-      </button>
-      <input
-        ref={addImageInputRef}
-        type="file"
-        accept="image/*"
-        multiple // Added multiple attribute
-        onChange={handleAddImageToDatabase}
-        className="hidden"
-      />
-      
-      {/* Optional: Show selected files count */}
-      <p className="text-xs text-gray-500 mt-2">
-        Hold Ctrl/Cmd to select multiple images
-      </p>
-    </div>
-  </div>
-</div>
+          </div>
         </div>
 
         {/* Results Section */}
@@ -1542,16 +1443,17 @@ const ImageSearch = () => {
                               className="flex-1 flex items-center justify-center px-3 py-1.5 bg-blue-100 text-blue-700 text-xs font-medium rounded-lg hover:bg-blue-200 transition-colors"
                             >
                               <Download className="h-3 w-3 mr-1.5" />
-                              Download Image
+                              Image
                             </button>
-                            <button
-                              onClick={() => handleDownloadFile(result.cad_url, result.name.replace(/\.[^/.]+$/, '.dwg'))}
-                              disabled={!result.cad_url}
-                              className="flex-1 flex items-center justify-center px-3 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-medium rounded-lg hover:bg-indigo-200 disabled:bg-gray-100 disabled:text-gray-500 transition-colors"
-                            >
-                              <Download className="h-3 w-3 mr-1.5" />
-                              Download CAD
-                            </button>
+                            {result.cad_url && (
+                              <button
+                                onClick={() => handleDownloadFile(result.cad_url, result.name)}
+                                className="flex-1 flex items-center justify-center px-3 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-medium rounded-lg hover:bg-indigo-200 transition-colors"
+                              >
+                                <Download className="h-3 w-3 mr-1.5" />
+                                CAD
+                              </button>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -1630,7 +1532,7 @@ const ImageSearch = () => {
                     </table>
                   </div>
                 )}
-  
+
                 {totalPages > 1 && (
                   <div className="mt-6 flex items-center justify-between border-t border-gray-200 pt-4">
                     <div className="flex-1 flex items-center justify-between">
